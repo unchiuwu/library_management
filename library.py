@@ -98,22 +98,34 @@ def mainscreen():
             print("enter a valid value")
             mainscreen()
 
+
+def transactions(username):
+    columns = "transactionid, bookid, title, username, date_issued, due_date, ifnull(return_date, 'Pending')"
+    sql = "select {} from transactions where username = '{}'".format(columns, username)
+    cursor.execute(sql)
+    conn.commit()
+    data = cursor.fetchall()
+    header = ["Transaction ID", "Book ID", "Title", "Username", "Date of Issue", "Due Date", "Date of Return"]
+    print(tabulate(data, headers = header))
+
+
 def homescreen(username):
     os.system('cls')
     admin = useroradmin(username)
-    print(admin)
+    # print(admin)
     if admin == 1:
-        sql = "select * from users where username = '{}'".format(username)
-        cursor.execute(sql)
-        conn.commit()
-        data = cursor.fetchall()
-        print(tabulate(data, headers= ["UserId", "Username", "Password", "Admin", "Total Books Borrowed"]))
+        columns = "*"
+        header = ["UserId", "Username", "Password", "Admin", "Total Books Borrowed"]
     else:
-        sql = "select username, total_books_borrowed from users where username = '{}'".format(username)
-        cursor.execute(sql)
-        conn.commit()
-        data = cursor.fetchall()
-        print(tabulate(data, headers= [ "Username", "Total Books Borrowed"]))
-
+        columns = "username, password, total_books_borrowed"
+        header = ["Username", "Password", "Total Books Borrowed"]
+    sql = "select {} from users where username = '{}'".format(columns, username)
+    cursor.execute(sql)
+    conn.commit()
+    data = cursor.fetchall()
+    print(tabulate(data, headers = header))
+    transactions(username)
+    
+# user screen show past transactions and current fees
 
 mainscreen()

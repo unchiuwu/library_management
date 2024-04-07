@@ -3,16 +3,16 @@ create table if not exists users (
     username varchar (50) unique, 
     password varchar (50) not null, 
     admin boolean default 0, 
-    total_books_borrowed int
+    total_books_borrowed int default 0
 );
 
 create table if not exists books ( 
     bookid int auto_increment primary key,
     title varchar(255),
     author varchar(255),
-    no_of_copies int,
+    no_of_copies int default 1,
     availability boolean default 0,
-    borrowed_count int
+    borrowed_count int default 0
 );
 
 create table if not exists transactions (
@@ -23,11 +23,10 @@ create table if not exists transactions (
     date_issued timestamp default current_timestamp, 
     due_date timestamp default (date_add(date_issued, INTERVAL 14 DAY)),
     return_date timestamp null default null, 
-    late_fees int default 0,
     foreign key (bookid) references books(bookid)
 );
 
-create table fees(
+create table if not exists fees(
     feeid int auto_increment primary key,
     transactionid int,
     userid int,
@@ -38,4 +37,3 @@ create table fees(
     feeamt int,
     foreign key (transactionid) references transactions(transactionid)
 );
-
