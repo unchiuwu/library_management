@@ -14,7 +14,7 @@ def signup():
             if any(char.islower() for char in password) and any(char.isupper() for char in password) and any(char.isdigit() for char in password):
                 t = True
         else:
-            print("invalid password, length must be min 8 characters with 1 capital letter, 1 small letter and 1 digit")
+            print("invalid password: length must have minimum 8 characters with 1 capital letter, 1 small letter and 1 digit")
     t = False
     while t == False:
         cnfm = input("enter password again: ")
@@ -101,7 +101,7 @@ def mainscreen():
 
 def transactions(username):
     columns = "transactionid, bookid, title, username, date_issued, due_date, ifnull(return_date, 'Pending')"
-    sql = "select {} from transactions where username = '{}'".format(columns, username)
+    sql = "select {} from transactions where username = '{}' order by return_date desc".format(columns, username)
     cursor.execute(sql)
     conn.commit()
     data = cursor.fetchall()
@@ -125,7 +125,56 @@ def homescreen(username):
     data = cursor.fetchall()
     print(tabulate(data, headers = header))
     transactions(username)
+    menu(username)
     
-# user screen show past transactions and current fees
+def menu(username):
+    print("enter a choice:\n ")
+    ch = input("1. issue\n2. return\n3. search all books\n4. check leaderboard\n5. log out")
+    if ch.isdigit():
+        if int(ch)==1:
+            issue(username)
+        elif int(ch)==2:
+            return_book(username)
+        elif int(ch)==3:
+            search(username)
+        elif int(ch)==4:
+            leaderboard(username)
+        elif int(ch)==5:
+            mainscreen(username)
+        else:
+            print("enter a valid value")
+            menu(username)
+
+
+def issue(username):
+    os.system('cls')
+    admin = useroradmin(username)
+    print(admin)
+
+
+def return_book(username):
+    os.system('cls')
+    admin = useroradmin(username)
+    print(admin)
+
+
+def search(username):
+    os.system('cls')
+    admin = useroradmin(username)
+    print(admin)
+
+
+def leaderboard(username):
+    os.system('cls')
+    admin = useroradmin(username)
+    print(admin)
+
+# menu : shows option to return issue check leaderboards clear dues etc
+
+# returnbooks : returns 1 or more books
+
+# issuesbooks : issues 1 or more books
+
+# leaderboard : arranges the users according to books borrowed
 
 mainscreen()
